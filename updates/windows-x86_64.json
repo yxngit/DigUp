@@ -1,0 +1,11 @@
+{
+  "version": "0.7.0-beta.3",
+  "notes": "The Mac's 0.6.2 fixes for Windows and Linux (a chosen folder read whole, Settings says why files aren't read, steady progress, faster keyword search, stub files, spreadsheets and presentations), plus the search process exiting when idle on Linux, no tray redraws without a tray, \"Checking folders…\" before indexing, and setup that looks at nothing before you've read the first page.",
+  "pub_date": "2026-10-22T10:46:59Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUNjNXOS9wdUxYRmEzVGNkUnRLSmlERjlyY1hOU25INTdDZjFYRnVBMXNiREFRdEZtRXd2YkxUbGhIcUVDd0ZXdU42ZHhqTnQ5QjRvNHIyZkRyc1M1WUFKczN6QzlxckFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNjYzNTc1CWZpbGU6RGlnVXBfMC43LjAtYmV0YS4zX3g2NC1zZXR1cC5leGUJdmVyc2lvbjowLjcuMC1iZXRhLjMKWklqR2FmaFdGdHVnbnR4TWlnY2hVWTV1TVNCRjNpWWszUVBpbmg3ZUd5K0YwUWRLVHdpRXhEVkZ6M0lJcFhpUFZuaFpFZVovRWdHLzFBNUljaW5kQnc9PQo=",
+      "url": "https://github.com/ARahim3/DigUp/releases/download/v0.7.0-beta.3/DigUp_0.7.0-beta.3_x64-setup.exe"
+    }
+  }
+}
