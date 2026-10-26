@@ -43,8 +43,11 @@ downloads and llama.cpp runs it.
 - **Vectors are the server's.** An index never mixes them with llama.cpp's: the provider's own vector
   source goes into the index fingerprint, so the first run after switching re-embeds every file (and
   so does switching back).
-- **Audio gets no vectors.** The endpoint takes text and images, not sound: a recording stays findable
-  by its words and name, and a video keeps the vectors of its frames but not of its soundtrack.
-- **The server truncates long texts** at 512 tokens (oMLX's engine default), where llama.cpp cuts at
-  2048: very long document chunks keep their beginning only.
-- Pictures are sized by the server's model, not by DigUp's vision token budgets.
+- **Audio needs the server's audio embeddings on.** oMLX 0.7.2+ serves audio through its mlx-vlm path
+  with the model's `embedding_audio_enabled` setting on (Settings in its dashboard, or
+  `~/.omlx/model_settings.json`). Without it a recording stays findable by its words and name, and a
+  video keeps the vectors of its frames but not of its soundtrack. (oMLX 0.7.2 as packaged also needs
+  a one-line shim for `mlx_audio.utils.resample_audio`, which mlx-vlm's `load_audio` imports: 0.4.3
+  keeps it in `mlx_audio.stt.utils`.)
+- Pictures are sized by the server's model, not by DigUp's vision token budgets; long texts aren't
+  cut short either (oMLX embeds them whole).

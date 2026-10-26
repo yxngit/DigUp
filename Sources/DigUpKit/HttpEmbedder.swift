@@ -3,12 +3,13 @@ import Foundation
 /// The `Embedder` behind `EmbeddingProvider`: `/v1/embeddings` on an OpenAI-compatible server (oMLX on this Mac),
 /// where the model the server has loaded replaces the 865 MB of files DigUp would download.
 ///
-/// Texts go in one request per 32 (what the server embeds in a batch anyway; it cuts each at 512 tokens of its own).
-/// Pictures go in one request each, as a base64 data URI in oMLX's `items` multimodal input — a file the server
-/// can't read or decode costs only its own vector, never its neighbours'. Audio has no input type on the endpoint
-/// (text and image only), so every audio window comes back "no vector": its file stays findable by its words, and a
-/// video keeps the vectors of its frames. Whatever the server returns is L2-normalized here, the shape the index
-/// and the llama.cpp runtime share.
+/// Texts go in one request per 32 (what the server embeds in a batch anyway; oMLX 0.7.2+ doesn't cut them short).
+/// Pictures and audio windows go in one request each, as base64 data URIs in oMLX's `items` multimodal input — a
+/// file the server can't read or decode costs only its own vector, never its neighbours'. Whatever the server
+/// returns is L2-normalized here, the shape the index and the llama.cpp runtime share.
+///
+/// Audio is served by oMLX 0.7.2+ with the model's `embedding_audio_enabled` setting on (its mlx-vlm path; older
+/// servers, or the setting off, answer an error per window and the file stays findable by its words).
 ///
 /// Vectors from a server are their own `vectorSource` (the server's model and its preprocessing, this runtime's
 /// normalization), so an index never mixes them with llama.cpp's: switching provider re-embeds, switching back too.
@@ -88,7 +89,17 @@ public final class HttpEmbedder: Embedder {
     }
 
     public func embedAudio(_ paths: [String]) throws -> [Embedding] {
-        paths.map { _ in Embedding(vector: nil, error: "no audio embeddings from \(provider.name): words only") }
+        // A window is 30 s of 16 kHz mono WAV (`MediaExtractors`), the model's own limit: it goes in as it is,
+        // one request a file, like pictures.
+        paths.map { path in
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path))
+                let uri = "data:audio/wav;base64," + data.base64EncodedString()
+                return Embedding(vector: try request(items: [["audio": uri]]).map(Self.normalized).first, error: nil)
+            } catch {
+                return Embedding(vector: nil, error: String("\(error)".prefix(300)))
+            }
+        }
     }
 
     // MARK: Requests

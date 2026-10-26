@@ -278,7 +278,8 @@ private struct ProviderSettings: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Use an embedding server (oMLX)")
                     Text("OpenAI-compatible /v1/embeddings in place of the 865 MB download. "
-                         + "Pictures and pages keep their vectors; audio and video sound don't (words only). "
+                         + "Pictures, pages and sound keep their vectors when the server serves them "
+                         + "(oMLX 0.7.2+, audio with the model's embedding_audio_enabled on). "
                          + "Switching re-embeds every file.")
                         .font(.system(size: 11))
                         .foregroundStyle(.secondary)
